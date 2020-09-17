@@ -6,7 +6,8 @@ const testSnapshot = () => {
   // cy.get('#tool_source').click({force: true});
   // cy.get('#svg_source_textarea').invoke('val').toMatchSnapshot();
   // cy.get('#tool_source_save').click({force: true});
-  cy.get('#svgcontent').toMatchSnapshot();
+  // remove attribute style causing tests to fail when auto
+  cy.get('#svgcontent').invoke('attr', 'style', '').toMatchSnapshot();
 };
 
 describe('use various parts of svg-edit', function () {
@@ -27,6 +28,7 @@ describe('use various parts of svg-edit', function () {
     cy.get('#tool_source_save').click({force: true});
     testSnapshot();
   });
+
   /*
   it('check tool_fhpath', function () {
     cy.get('#tool_fhpath')
@@ -67,6 +69,15 @@ describe('use various parts of svg-edit', function () {
     cy.get('#svg_1').click({force: true});
     cy.get('#tool_bold')
       .click({force: true});
+    testSnapshot();
+  });
+
+  it('check zoom', function () {
+    cy.get('#zoom_dropdown').click({force: true});
+    // eslint-disable-next-line promise/always-return, promise/catch-or-return, promise/prefer-await-to-then
+    cy.get('#fit_to_all').then((option) => {
+      option[0].click(); // this is jquery click() not cypress click()
+    });
     testSnapshot();
   });
 });

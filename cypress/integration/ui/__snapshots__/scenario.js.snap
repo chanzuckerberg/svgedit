@@ -258,3 +258,23 @@ exports[`use various parts of svg-edit > check tool_bold #0`] = `
   </g>
 </svg>
 `;
+
+exports[`use various parts of svg-edit > check zoom #0`] = `
+<svg
+  id="svgcontent"
+  width="640"
+  height="480"
+  x="640"
+  y="480"
+  overflow="visible"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:se="http://svg-edit.googlecode.com"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  viewBox="0 0 640 480"
+>
+  <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+  <g class="layer" style="pointer-events:all">
+    <title style="pointer-events:inherit">Layer 1</title>
+  </g>
+</svg>
+`;

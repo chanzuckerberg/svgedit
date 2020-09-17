@@ -36,7 +36,6 @@ import Layer from '../common/layer.js';
 import jQueryPluginJSHotkeys from './js-hotkeys/jquery.hotkeys.min.js';
 import jQueryPluginSVGIcons from './svgicons/jQuery.svgIcons.js';
 import jQueryPluginJGraduate from './jgraduate/jQuery.jGraduate.js';
-import jQueryPluginSpinButton from './spinbtn/jQuery.SpinButton.js';
 import jQueryPluginSVG from '../common/jQuery.attr.js'; // Needed for SVG attribute setting and array form with `attr`
 import jQueryPluginContextMenu from './contextmenu/jQuery.contextMenu.js';
 import jQueryPluginJPicker from './jgraduate/jQuery.jPicker.js';
@@ -53,7 +52,7 @@ const editor = {};
 
 const $ = [
   jQueryPluginJSHotkeys, jQueryPluginSVGIcons, jQueryPluginJGraduate,
-  jQueryPluginSpinButton, jQueryPluginSVG, jQueryPluginContextMenu, jQueryPluginJPicker
+  jQueryPluginSVG, jQueryPluginContextMenu, jQueryPluginJPicker
 ].reduce((jq, func) => func(jq), jQuery);
 
 const homePage = 'https://github.com/SVG-Edit/svgedit';
@@ -65,7 +64,7 @@ const homePage = 'https://github.com/SVG-Edit/svgedit';
 /**
 * @type {Float}
 */
-editor.tool_scale = 1; // Dependent on icon size, so any use to making configurable instead? Used by `jQuery.SpinButton.js`
+editor.tool_scale = 1; // Dependent on icon size, so any use to making configurable instead?
 /**
 * @type {Integer}
 */
@@ -835,8 +834,6 @@ editor.init = function () {
     }
   };
 
-  const stateObj = {tool_scale: editor.tool_scale};
-
   /**
   *
   * @returns {void}
@@ -929,8 +926,6 @@ editor.init = function () {
       const iconSizes = {s: 0.75, m: 1, l: 1.25, xl: 1.5};
       scale = iconSizes[size];
     }
-
-    stateObj.tool_scale = editor.tool_scale = scale;
 
     setFlyoutPositions();
     // $('.tools_flyout').each(function () {
@@ -2499,8 +2494,8 @@ editor.init = function () {
     const zoomlevel = zInfo.zoom,
       bb = zInfo.bbox;
 
-    if (zoomlevel < 0.001) {
-      changeZoom({value: 0.1});
+    if (zoomlevel <= 0) {
+      changeZoom({target: {value: 10}});
       return;
     }
 
@@ -2520,13 +2515,10 @@ editor.init = function () {
     zoomDone();
   };
 
-  /**
-  * @type {module:jQuerySpinButton.ValueCallback}
-  */
-  const changeZoom = function (ctl) {
-    const zoomlevel = ctl.value / 100;
-    if (zoomlevel < 0.001) {
-      ctl.value = 0.1;
+  const changeZoom = function (ev) {
+    const zoomlevel = ev.target.value / 100;
+    if (zoomlevel <= 0) {
+      ev.target.value = 10;
       return;
     }
     const zoom = svgCanvas.getZoom();
@@ -2893,7 +2885,6 @@ editor.init = function () {
     * @property {string|Integer} [colnum] Added as part of the option list class.
     * @property {string} [label] Label associated with the tool, visible in the UI
     * @property {Integer} [size] Value of the "size" attribute of the tool input
-    * @property {module:jQuerySpinButton.SpinButtonConfig} [spindata] When added to a tool of type "input", this tool becomes a "spinner" which allows the number to be in/decreased.
     */
     if (ext.context_tools) {
       $.each(ext.context_tools, function (i, tool) {
@@ -2967,10 +2958,6 @@ editor.init = function () {
 
           // Add to given tool.panel
           const inp = $(html).appendTo(panel).find('input');
-
-          if (tool.spindata) {
-            inp.SpinButton(tool.spindata);
-          }
 
           if (tool.events) {
             $.each(tool.events, function (evt, func) {
@@ -3363,46 +3350,29 @@ editor.init = function () {
 
   $('#image_save_opts input').val([editor.pref('img_save')]);
 
-  /**
-  * @type {module:jQuerySpinButton.ValueCallback}
-  */
-  const changeRectRadius = function (ctl) {
-    svgCanvas.setRectRadius(ctl.value);
+  const changeRectRadius = function (ev) {
+    svgCanvas.setRectRadius(ev.target.value);
   };
 
-  /**
-  * @type {module:jQuerySpinButton.ValueCallback}
-  */
-  const changeFontSize = function (ctl) {
-    svgCanvas.setFontSize(ctl.value);
+  const changeFontSize = function (ev) {
+    svgCanvas.setFontSize(ev.target.value);
   };
 
-  /**
-  * @type {module:jQuerySpinButton.ValueCallback}
-  */
-  const changeStrokeWidth = function (ctl) {
-    let val = ctl.value;
+  const changeStrokeWidth = function (ev) {
+    let val = ev.target.value;
     if (val === 0 && selectedElement && ['line', 'polyline'].includes(selectedElement.nodeName)) {
-      val = ctl.value = 1;
+      val = ev.target.value = 1;
     }
     svgCanvas.setStrokeWidth(val);
   };
 
-  /**
-  * @type {module:jQuerySpinButton.ValueCallback}
-  */
-  const changeRotationAngle = function (ctl) {
-    svgCanvas.setRotationAngle(ctl.value);
-    $('#tool_reorient').toggleClass('disabled', Number.parseInt(ctl.value) === 0);
+  const changeRotationAngle = function (ev) {
+    svgCanvas.setRotationAngle(ev.target.value);
+    $('#tool_reorient').toggleClass('disabled', Number.parseInt(ev.target.value) === 0);
   };
 
-  /**
-  * @param {external:jQuery.fn.SpinButton} ctl Spin Button
-  * @param {string} [val=ctl.value]
-  * @returns {void}
-  */
   const changeOpacity = function (ctl, val) {
-    if (Utils.isNullish(val)) { val = ctl.value; }
+    if (Utils.isNullish(val)) { val = ctl.target.value; }
     $('#group_opacity').val(val);
     if (!ctl || !ctl.handle) {
       $('#opac_slider').slider('option', 'value', val);
@@ -3410,14 +3380,8 @@ editor.init = function () {
     svgCanvas.setOpacity(val / 100);
   };
 
-  /**
-  * @param {external:jQuery.fn.SpinButton} ctl Spin Button
-  * @param {string} [val=ctl.value]
-  * @param {boolean} noUndo
-  * @returns {void}
-  */
   const changeBlur = function (ctl, val, noUndo) {
-    if (Utils.isNullish(val)) { val = ctl.value; }
+    if (Utils.isNullish(val)) { val = ctl.target.value; }
     $('#blur').val(val);
     let complete = false;
     if (!ctl || !ctl.handle) {
@@ -3819,7 +3783,7 @@ editor.init = function () {
     if (val) {
       zoomChanged(window, val);
     } else {
-      changeZoom({value: Number.parseFloat(item.text())});
+      changeZoom({target: {value: Number.parseFloat(item.text())}});
     }
   }, true);
 
@@ -5266,9 +5230,6 @@ editor.init = function () {
 
   $(window).bind('load resize', centerCanvas);
 
-  /**
-   * @type {module:jQuerySpinButton.StepCallback}
-   */
   function stepFontSize (elem, step) {
     const origVal = Number(elem.value);
     const sugVal = origVal + step;
@@ -5289,40 +5250,6 @@ editor.init = function () {
     }
     return sugVal;
   }
-
-  /**
-   * @type {module:jQuerySpinButton.StepCallback}
-   */
-  function stepZoom (elem, step) {
-    const origVal = Number(elem.value);
-    if (origVal === 0) { return 100; }
-    const sugVal = origVal + step;
-    if (step === 0) { return origVal; }
-
-    if (origVal >= 100) {
-      return sugVal;
-    }
-    if (sugVal >= origVal) {
-      return origVal * 2;
-    }
-    return origVal / 2;
-  }
-
-  // function setResolution (w, h, center) {
-  //   updateCanvas();
-  //   // w -= 0; h -= 0;
-  //   // $('#svgcanvas').css({width: w, height: h});
-  //   // $('#canvas_width').val(w);
-  //   // $('#canvas_height').val(h);
-  //   //
-  //   // if (center) {
-  //   //   const wArea = workarea;
-  //   //   const scrollY = h/2 - wArea.height()/2;
-  //   //   const scrollX = w/2 - wArea.width()/2;
-  //   //   wArea[0].scrollTop = scrollY;
-  //   //   wArea[0].scrollLeft = scrollX;
-  //   // }
-  // }
 
   $('#resolution').change(function () {
     const wh = $('#canvas_width,#canvas_height');
@@ -5702,32 +5629,25 @@ editor.init = function () {
     }
   });
 
-  // init SpinButtons
-  $('#rect_rx').SpinButton({
-    min: 0, max: 1000, stateObj, callback: changeRectRadius
-  });
-  $('#stroke_width').SpinButton({
-    min: 0, max: 99, smallStep: 0.1, stateObj, callback: changeStrokeWidth
-  });
-  $('#angle').SpinButton({
-    min: -180, max: 180, step: 5, stateObj, callback: changeRotationAngle
-  });
-  $('#font_size').SpinButton({
-    min: 0.001, stepfunc: stepFontSize, stateObj, callback: changeFontSize
-  });
-  $('#group_opacity').SpinButton({
-    min: 0, max: 100, step: 5, stateObj, callback: changeOpacity
-  });
-  $('#blur').SpinButton({
-    min: 0, max: 10, step: 0.1, stateObj, callback: changeBlur
-  });
-  $('#zoom').SpinButton({
-    min: 0.001, max: 10000, step: 50, stepfunc: stepZoom,
-    stateObj, callback: changeZoom
-  // Set default zoom
-  }).val(
-    svgCanvas.getZoom() * 100
-  );
+  const initSpinButton = ({id, min, max, step, callback, defaultValue}) => {
+    const element = document.getElementById(id);
+    element.addEventListener('change', callback);
+    element.setAttribute('type', 'number');
+    element.setAttribute('min', min);
+    element.setAttribute('max', max);
+    element.setAttribute('step', step);
+    if (defaultValue) {
+      element.value = defaultValue;
+    }
+  };
+
+  initSpinButton({id: 'rect_rx', min: 0, max: 1000, callback: changeRectRadius});
+  initSpinButton({id: 'stroke_width', min: 0, max: 99, step: 0.1, callback: changeStrokeWidth});
+  initSpinButton({id: 'angle', min: -180, max: 180, step: 5, callback: changeRotationAngle});
+  initSpinButton({id: 'font_size', min: 0.001, stepfunc: stepFontSize, callback: changeFontSize});
+  initSpinButton({id: 'group_opacity', min: 0, max: 100, step: 5, callback: changeOpacity});
+  initSpinButton({id: 'blur', min: 0, max: 10, step: 0.1, callback: changeBlur});
+  initSpinButton({id: 'zoom', min: 10, max: 10000, step: 10, callback: changeZoom, defaultValue: svgCanvas.getZoom() * 100});
 
   $('#workarea').contextMenu(
     {
