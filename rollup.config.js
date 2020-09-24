@@ -2,7 +2,7 @@
 // This rollup script is run by the command:
 // 'npm run build'
 
-import {join, basename} from 'path';
+import path from 'path';
 import {lstatSync, readdirSync} from 'fs';
 import rimraf from 'rimraf';
 import babel from '@rollup/plugin-babel';
@@ -13,7 +13,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 import url from '@rollup/plugin-url'; // for XML/SVG files
 import dynamicImportVars from '@rollup/plugin-dynamic-import-vars';
 import {terser} from 'rollup-plugin-terser';
-import progress from 'rollup-plugin-progress';
+// import progress from 'rollup-plugin-progress';
 import filesize from 'rollup-plugin-filesize';
 
 // utility function
@@ -21,7 +21,7 @@ const getDirectories = (source) => {
   const isDirectory = (dir) => {
     return lstatSync(dir).isDirectory();
   };
-  return readdirSync(source).map((nme) => join(source, nme)).filter((i) => isDirectory(i));
+  return readdirSync(source).map((nme) => path.join(source, nme)).filter((i) => isDirectory(i));
 };
 
 // capture the list of files to build for extensions and ext-locales
@@ -57,7 +57,7 @@ const config = [{
     }
   ],
   plugins: [
-    progress(),
+    // progress(),
     copy({
       targets: [
         {
@@ -91,15 +91,13 @@ const config = [{
           dest: 'dist/editor/system'
         },
         {src: 'src/editor/images', dest},
-        {src: 'src/editor/jquery.min.js', dest},
-        {src: 'src/editor/jquery-ui', dest},
+        {src: 'src/editor/shapelib', dest},
         {src: 'src/editor/jgraduate', dest},
         {src: 'src/editor/spinbtn', dest},
         {src: 'src/editor/embedapi.html', dest},
         {src: 'src/editor/embedapi.js', dest},
         {src: 'src/editor/browser-not-supported.html', dest},
         {src: 'src/editor/redirect-on-lacking-support.js', dest},
-        {src: 'src/editor/redirect-on-no-module-support.js', dest},
         {src: 'src/editor/svgedit.css', dest}
       ]
     }),
@@ -118,7 +116,7 @@ const config = [{
 
 // config for dynamic extensions
 extensionDirs.forEach((extensionDir) => {
-  const extensionName = basename(extensionDir);
+  const extensionName = path.basename(extensionDir);
   extensionName && config.push(
     {
       input: `./src/editor/extensions/${extensionName}/${extensionName}.js`,
@@ -136,7 +134,7 @@ extensionDirs.forEach((extensionDir) => {
         }
       ],
       plugins: [
-        progress(),
+        // progress(),
         url({
           include: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.gif', '**/*.xml'],
           limit: 0,

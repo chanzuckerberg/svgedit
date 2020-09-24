@@ -28,8 +28,6 @@ describe('use various parts of svg-edit', function () {
     cy.get('#tool_source_save').click({force: true});
     testSnapshot();
   });
-
-  /*
   it('check tool_fhpath', function () {
     cy.get('#tool_fhpath')
       .click({force: true});
@@ -40,7 +38,6 @@ describe('use various parts of svg-edit', function () {
       .trigger('mouseup', {force: true});
     cy.get('#svgcontent').toMatchSnapshot();
   });
-*/
   it('check tool_text', function () {
     cy.get('#tool_text')
       .click({force: true});
@@ -71,13 +68,10 @@ describe('use various parts of svg-edit', function () {
       .click({force: true});
     testSnapshot();
   });
-
-  it('check zoom', function () {
-    cy.get('#zoom_dropdown').click({force: true});
-    // eslint-disable-next-line promise/always-return, promise/catch-or-return, promise/prefer-await-to-then
-    cy.get('#fit_to_all').then((option) => {
-      option[0].click(); // this is jquery click() not cypress click()
-    });
+  it('check change color', function () {
+    cy.get('#svg_1').click({force: true});
+    cy.get('[data-rgb="#ffff00"]')
+      .click({force: true});
     testSnapshot();
   });
 });
