@@ -18,6 +18,7 @@
 // eslint-disable-next-line node/no-unpublished-import
 import deparam from 'deparam';
 
+import {addAltDropDown, addDropDown, setIcon} from './ui/dropdown.js';
 import './touch.js';
 import {NS} from '../common/namespaces.js';
 import {isWebkit, isChrome, isGecko, isIE, isMac, isTouch} from '../common/browser.js';
@@ -379,7 +380,7 @@ editor.setStrings = setStrings;
 editor.loadContentAndPrefs = function () {
   if (!curConfig.forceStorage &&
     (curConfig.noStorageOnLoad ||
-        !document.cookie.match(/(?:^|;\s*)svgeditstore=(?:prefsAndContent|prefsOnly)/)
+      !document.cookie.match(/(?:^|;\s*)svgeditstore=(?:prefsAndContent|prefsOnly)/)
     )
   ) {
     return;
@@ -482,7 +483,7 @@ editor.setConfig = function (opts, cfgCfg) {
         return;
       }
       curConfig[key] = curConfig[key].concat(val); // We will handle any dupes later
-    // Only allow other curConfig if defined in defaultConfig
+      // Only allow other curConfig if defined in defaultConfig
     } else if ({}.hasOwnProperty.call(defaultConfig, key)) {
       if (cfgCfg.overwrite === false && (
         curConfig.preventAllURLConfig ||
@@ -620,7 +621,7 @@ editor.init = function () {
       */
       editor.storage = localStorage;
     }
-  } catch (err) {}
+  } catch (err) { }
 
   // Todo: Avoid const-defined functions and group functions together, etc. where possible
   const goodLangs = [];
@@ -735,24 +736,7 @@ editor.init = function () {
     }
   })();
   setupCurPrefs();
-
-  /**
-  * Called internally.
-  * @function module:SVGEditor.setIcon
-  * @param {string|Element|external:jQuery} elem
-  * @param {string|external:jQuery} iconId
-  * @param {Float} forcedSize Not in use
-  * @returns {void}
-  */
-  const setIcon = editor.setIcon = function (elem, iconId, forcedSize) {
-    const icon = (typeof iconId === 'string') ? $.getSvgIcon(iconId, true) : iconId.clone();
-    if (!icon) {
-      // Todo: Investigate why this still occurs in some cases
-      console.log('NOTE: Icon image missing: ' + iconId); // eslint-disable-line no-console
-      return;
-    }
-    $(elem).empty().append(icon);
-  };
+  editor.setIcon = setIcon;
 
   /**
    * @fires module:svgcanvas.SvgCanvas#event:ext_addLangData
@@ -913,8 +897,8 @@ editor.init = function () {
   const setIconSize = editor.setIconSize = function (size) {
     // const elems = $('.tool_button, .push_button, .tool_button_current, .disabled, .icon_label, #url_notice, #tool_open');
     const selToscale = '#tools_top .toolset, #editor_panel > *, #history_panel > *,' +
-  '        #main_button, #tools_left > *, #path_node_panel > *, #multiselected_panel > *,' +
-  '        #g_panel > *, #tool_font_size > *, .tools_flyout';
+      '        #main_button, #tools_left > *, #path_node_panel > *, #multiselected_panel > *,' +
+      '        #g_panel > *, #tool_font_size > *, .tools_flyout';
 
     const elems = $(selToscale);
 
@@ -1240,7 +1224,7 @@ editor.init = function () {
     curConfig
   );
   const palette = [
-      // Todo: Make into configuration item?
+    // Todo: Make into configuration item?
       '#000000', '#3f3f3f', '#7f7f7f', '#bfbfbf', '#ffffff',
       '#ff0000', '#ff7f00', '#ffff00', '#7fff00',
       '#00ff00', '#00ff7f', '#00ffff', '#007fff',
@@ -1290,7 +1274,7 @@ editor.init = function () {
           cancelable: true
         });
         w.document.documentElement.dispatchEvent(svgEditorReadyEvent);
-      } catch (e) {}
+      } catch (e) { }
     }
   }());
 
@@ -2051,12 +2035,12 @@ editor.init = function () {
     }
 
     // All elements including image and group have opacity
-    if (!Utils.isNullish(selectedElement)) {
+    if (selectedElement) {
       const opacPerc = (selectedElement.getAttribute('opacity') || 1.0) * 100;
-      $('#group_opacity').val(opacPerc);
-      $('#opac_slider').slider('option', 'value', opacPerc);
-      $('#elem_id').val(selectedElement.id);
-      $('#elem_class').val(selectedElement.getAttribute('class'));
+      document.getElementById('group_opacity').value = opacPerc;
+      document.getElementById('opac_slider').value = opacPerc;
+      document.getElementById('elem_id').value = selectedElement.id;
+      document.getElementById('elem_class').value = selectedElement.getAttribute('class');
     }
 
     updateToolButtonState();
@@ -2092,7 +2076,7 @@ editor.init = function () {
 
       const blurval = svgCanvas.getBlur(elem);
       $('#blur').val(blurval);
-      $('#blur_slider').slider('option', 'value', blurval);
+      document.getElementById('blur_slider').value = blurval;
 
       if (svgCanvas.addedNew) {
         if (elname === 'image' && svgCanvas.getMode() === 'image') {
@@ -2240,10 +2224,10 @@ editor.init = function () {
               $('#text').focus().select();
             }, 100);
           }
-        // text
+          // text
         } else if (tagName === 'image' && svgCanvas.getMode() === 'image') {
           setImageURL(svgCanvas.getHref(elem));
-        // image
+          // image
         } else if (tagName === 'g' || tagName === 'use') {
           $('#container_panel').show();
           const title = svgCanvas.getTitle();
@@ -2255,7 +2239,7 @@ editor.init = function () {
       }
       menuItems[(tagName === 'g' ? 'en' : 'dis') + 'ableContextMenuItems']('#ungroup');
       menuItems[((tagName === 'g' || !multiselected) ? 'dis' : 'en') + 'ableContextMenuItems']('#group');
-    // if (!Utils.isNullish(elem))
+      // if (!Utils.isNullish(elem))
     } else if (multiselected) {
       $('#multiselected_panel').show();
       menuItems
@@ -2382,11 +2366,11 @@ editor.init = function () {
         $('#tool_reorient').toggleClass('disabled', ang === 0);
         break;
 
-      // TODO: Update values that change on move/resize, etc
-      // } case 'select': {
-      // } case 'resize': {
-      //   break;
-      // }
+        // TODO: Update values that change on move/resize, etc
+        // } case 'select': {
+        // } case 'resize': {
+        //   break;
+        // }
       }
       }
     }
@@ -2426,8 +2410,8 @@ editor.init = function () {
         if (isSvgElem) {
           updateCanvas();
         }
-      // Update selectedElement if element is no longer part of the image.
-      // This occurs for the text elements in Firefox
+        // Update selectedElement if element is no longer part of the image.
+        // This occurs for the text elements in Firefox
       } else if (elem && selectedElement && Utils.isNullish(selectedElement.parentNode)) {
         // || elem && elem.tagName == "path" && !multiselected) { // This was added in r1430, but not sure why
         selectedElement = elem;
@@ -2494,7 +2478,7 @@ editor.init = function () {
       bb = zInfo.bbox;
 
     if (zoomlevel <= 0) {
-      changeZoom({target: {value: 10}});
+      changeZoom(10);
       return;
     }
 
@@ -2514,12 +2498,7 @@ editor.init = function () {
     zoomDone();
   };
 
-  const changeZoom = function (ev) {
-    const zoomlevel = ev.target.value / 100;
-    if (zoomlevel <= 0) {
-      ev.target.value = 10;
-      return;
-    }
+  const changeZoom = function (zoomlevel) {
     const zoom = svgCanvas.getZoom();
     const wArea = workarea;
 
@@ -2753,75 +2732,6 @@ editor.init = function () {
   };
 
   /**
-  * @param {string} elemSel
-  * @param {string} listSel
-  * @param {external:jQuery.Function} callback
-  * @param {PlainObject} opts
-  * @param {boolean} opts.dropUp
-  * @param {boolean} opts.seticon
-  * @param {boolean} opts.multiclick
-  * @todo Combine this with `addDropDown` or find other way to optimize.
-  * @returns {void}
-  */
-  const addAltDropDown = function (elemSel, listSel, callback, opts) {
-    const button = $(elemSel);
-    const {dropUp} = opts;
-    const list = $(listSel);
-    if (dropUp) {
-      $(elemSel).addClass('dropup');
-    }
-    list.find('li').bind('mouseup', function (...args) {
-      if (opts.seticon) {
-        setIcon('#cur_' + button[0].id, $(this).children());
-        $(this).addClass('current').siblings().removeClass('current');
-      }
-      callback.apply(this, ...args);
-    });
-
-    let onButton = false;
-    $(window).mouseup(function (evt) {
-      if (!onButton) {
-        button.removeClass('down');
-        list.hide();
-        list.css({top: 0, left: 0});
-      }
-      onButton = false;
-    });
-
-    // const height = list.height(); // Currently unused
-    button.bind('mousedown', function () {
-      const off = button.offset();
-      if (dropUp) {
-        off.top -= list.height();
-        off.left += 8;
-      } else {
-        off.top += button.height();
-      }
-      list.offset(off);
-
-      if (!button.hasClass('down')) {
-        list.show();
-        onButton = true;
-      } else {
-        // CSS position must be reset for Webkit
-        list.hide();
-        list.css({top: 0, left: 0});
-      }
-      button.toggleClass('down');
-    }).hover(function () {
-      onButton = true;
-    }).mouseout(function () {
-      onButton = false;
-    });
-
-    if (opts.multiclick) {
-      list.mousedown(function () {
-        onButton = true;
-      });
-    }
-  };
-
-  /**
    * @param {external:Window} win
    * @param {module:svgcanvas.SvgCanvas#event:extension_added} ext
    * @listens module:svgcanvas.SvgCanvas#event:extension_added
@@ -2910,7 +2820,7 @@ editor.init = function () {
           break;
         } case 'select': {
           html = '<label' + contId + '>' +
-            '<select id="' + tool.id + '">';
+              '<select id="' + tool.id + '">';
           $.each(tool.options, function (val, text) {
             const sel = (val === tool.defval) ? ' selected' : '';
             html += '<option value="' + val + '"' + sel + '>' + text + '</option>';
@@ -2925,7 +2835,7 @@ editor.init = function () {
           break;
         } case 'button-select': {
           html = '<div id="' + tool.id + '" class="dropdown toolset" title="' + tool.title + '">' +
-            '<div id="cur_' + tool.id + '" class="icon_label"></div><button></button></div>';
+              '<div id="cur_' + tool.id + '" class="icon_label"></div><button></button></div>';
 
           const list = $('<ul id="' + tool.id + '_opts"></ul>').appendTo('#option_lists');
 
@@ -2947,11 +2857,11 @@ editor.init = function () {
           break;
         } case 'input': {
           html = '<label' + contId + '>' +
-            '<span id="' + tool.id + '_label">' +
-            tool.label + ':</span>' +
-            '<input id="' + tool.id + '" title="' + tool.title +
-            '" size="' + (tool.size || '4') +
-            '" value="' + (tool.defval || '') + '" type="text"/></label>';
+              '<span id="' + tool.id + '_label">' +
+              tool.label + ':</span>' +
+              '<input id="' + tool.id + '" title="' + tool.title +
+              '" size="' + (tool.size || '4') +
+              '" value="' + (tool.defval || '') + '" type="text"/></label>';
 
           // Creates the tool, hides & adds it, returns the select element
 
@@ -3017,8 +2927,8 @@ editor.init = function () {
         if (!svgicons) {
           icon = $(
             '<img src="' + btn.icon +
-              (btn.title ? '" alt="' + btn.title : '') +
-              '">'
+            (btn.title ? '" alt="' + btn.title : '') +
+            '">'
           );
         } else {
           fallbackObj[id] = btn.icon;
@@ -3070,7 +2980,7 @@ editor.init = function () {
           }
 
           if (btn.type === 'mode_flyout') {
-          // Add to flyout menu / make flyout menu
+            // Add to flyout menu / make flyout menu
             // const opts = btn.includeWith;
             // // opts.button, default, position
             refBtn = $(button);
@@ -3349,49 +3259,36 @@ editor.init = function () {
 
   $('#image_save_opts input').val([editor.pref('img_save')]);
 
-  const changeRectRadius = function (ev) {
-    svgCanvas.setRectRadius(ev.target.value);
+  const changeRectRadius = function (value) {
+    svgCanvas.setRectRadius(value);
   };
 
-  const changeFontSize = function (ev) {
-    svgCanvas.setFontSize(ev.target.value);
+  const changeFontSize = function (value) {
+    svgCanvas.setFontSize(value);
   };
 
-  const changeStrokeWidth = function (ev) {
-    let val = ev.target.value;
-    if (val === 0 && selectedElement && ['line', 'polyline'].includes(selectedElement.nodeName)) {
-      val = ev.target.value = 1;
-    }
-    svgCanvas.setStrokeWidth(val);
-  };
-
-  const changeRotationAngle = function (ev) {
-    svgCanvas.setRotationAngle(ev.target.value);
-    $('#tool_reorient').toggleClass('disabled', Number.parseInt(ev.target.value) === 0);
-  };
-
-  const changeOpacity = function (ctl, val) {
-    if (Utils.isNullish(val)) { val = ctl.target.value; }
-    $('#group_opacity').val(val);
-    if (!ctl || !ctl.handle) {
-      $('#opac_slider').slider('option', 'value', val);
-    }
-    svgCanvas.setOpacity(val / 100);
-  };
-
-  const changeBlur = function (ctl, val, noUndo) {
-    if (Utils.isNullish(val)) { val = ctl.target.value; }
-    $('#blur').val(val);
-    let complete = false;
-    if (!ctl || !ctl.handle) {
-      $('#blur_slider').slider('option', 'value', val);
-      complete = true;
-    }
-    if (noUndo) {
-      svgCanvas.setBlurNoUndo(val);
+  const changeStrokeWidth = function (value) {
+    if (value === 0 && selectedElement && ['line', 'polyline'].includes(selectedElement.nodeName)) {
+      svgCanvas.setStrokeWidth(1);
     } else {
-      svgCanvas.setBlur(val, complete);
+      svgCanvas.setStrokeWidth(value);
     }
+  };
+
+  const changeRotationAngle = (value) => {
+    svgCanvas.setRotationAngle(value);
+    $('#tool_reorient').toggleClass('disabled', Number.parseInt(value) === 0);
+  };
+
+  const changeOpacity = (value) => {
+    document.getElementById('group_opacity').value = value;
+    document.getElementById('opac_slider').value = value;
+    svgCanvas.setOpacity(value / 100);
+  };
+
+  const changeBlur = (value) => {
+    document.getElementById('blur').value = value;
+    svgCanvas.setBlur(value, true);
   };
 
   $('#stroke_style').change(function () {
@@ -3674,115 +3571,41 @@ editor.init = function () {
     });
   }());
   // Made public for UI customization.
-  // TODO: Group UI functions into a public editor.ui interface.
-  /**
-   * See {@link http://api.jquery.com/bind/#bind-eventType-eventData-handler}.
-   * @callback module:SVGEditor.DropDownCallback
-   * @param {external:jQuery.Event} ev See {@link http://api.jquery.com/Types/#Event}
-   * @listens external:jQuery.Event
-   * @returns {void|boolean} Calls `preventDefault()` and `stopPropagation()`
-  */
-  /**
-   * @function module:SVGEditor.addDropDown
-   * @param {Element|string} elem DOM Element or selector
-   * @param {module:SVGEditor.DropDownCallback} callback Mouseup callback
-   * @param {boolean} dropUp
-   * @returns {void}
-  */
-  editor.addDropDown = function (elem, callback, dropUp) {
-    if (!$(elem).length) { return; } // Quit if called on non-existent element
-    const button = $(elem).find('button');
-    const list = $(elem).find('ul').attr('id', $(elem)[0].id + '-list');
-    if (dropUp) {
-      $(elem).addClass('dropup');
-    } else {
-      // Move list to place where it can overflow container
-      $('#option_lists').append(list);
-    }
-    list.find('li').bind('mouseup', callback);
 
-    let onButton = false;
-    $(window).mouseup(function (evt) {
-      if (!onButton) {
-        button.removeClass('down');
-        list.hide();
-      }
-      onButton = false;
-    });
+  editor.addDropDown = addDropDown;
 
-    button.bind('mousedown', function () {
-      if (!button.hasClass('down')) {
-        if (!dropUp) {
-          const pos = $(elem).position();
-          list.css({
-            top: pos.top + 24,
-            left: pos.left - 10
-          });
-        }
-        list.show();
-        onButton = true;
-      } else {
-        list.hide();
-      }
-      button.toggleClass('down');
-    }).hover(function () {
-      onButton = true;
-    }).mouseout(function () {
-      onButton = false;
-    });
-  };
-
-  editor.addDropDown('#font_family_dropdown', function () {
+  editor.addDropDown(document.getElementById('font_family_dropdown'), () => {
     $('#font_family').val($(this).text()).change();
   });
 
-  editor.addDropDown('#opacity_dropdown', function () {
-    if ($(this).find('div').length) { return; }
-    const perc = Number.parseInt($(this).text().split('%')[0]);
-    changeOpacity(false, perc);
+  editor.addDropDown(document.getElementById('opacity_dropdown'), (ev) => {
+    const perc = Number.parseInt(ev.srcElement.textContent.split('%')[0]);
+    changeOpacity(perc);
   }, true);
 
-  // For slider usage, see: http://jqueryui.com/demos/slider/
-  $('#opac_slider').slider({
-    start () {
-      $('#opacity_dropdown li:not(.special)').hide();
-    },
-    stop () {
-      $('#opacity_dropdown li').show();
-      $(window).mouseup();
-    },
-    slide (evt, ui) {
-      changeOpacity(ui);
-    }
-  });
+  document.getElementById('opac_slider').addEventListener('change', (evt) => changeOpacity(evt.target.value));
 
-  editor.addDropDown('#blur_dropdown', $.noop);
+  editor.addDropDown(document.getElementById('blur_dropdown'), $.noop);
 
-  let slideStart = false;
   $('#blur_slider').slider({
     max: 10,
     step: 0.1,
     stop (evt, ui) {
-      slideStart = false;
       changeBlur(ui);
       $('#blur_dropdown li').show();
       $(window).mouseup();
     },
-    start () {
-      slideStart = true;
-    },
     slide (evt, ui) {
-      changeBlur(ui, null, slideStart);
+      changeBlur(ui);
     }
   });
 
-  editor.addDropDown('#zoom_dropdown', function () {
-    const item = $(this);
-    const val = item.data('val');
+  editor.addDropDown(document.getElementById('zoom_dropdown'), (ev) => {
+    const {val} = ev.srcElement.dataset;
     if (val) {
       zoomChanged(window, val);
     } else {
-      changeZoom({target: {value: Number.parseFloat(item.text())}});
+      changeZoom(Number.parseFloat(ev.srcElement.textContent) / 100);
     }
   }, true);
 
@@ -4364,7 +4187,7 @@ editor.init = function () {
     // group
     if (multiselected) {
       svgCanvas.groupSelectedElements();
-    // ungroup
+      // ungroup
     } else if (selectedElement) {
       svgCanvas.ungroupSelectedElement();
     }
@@ -5229,6 +5052,10 @@ editor.init = function () {
 
   $(window).bind('load resize', centerCanvas);
 
+  /**
+   * @param elem
+   * @param step
+   */
   function stepFontSize (elem, step) {
     const origVal = Number(elem.value);
     const sugVal = origVal + step;
@@ -5299,32 +5126,48 @@ editor.init = function () {
     const toolButtons = [
       {sel: '#tool_select', fn: clickSelect, evt: 'click', key: ['V', true]},
       {sel: '#tool_fhpath', fn: clickFHPath, evt: 'click', key: ['Q', true]},
-      {sel: '#tool_line', fn: clickLine, evt: 'click', key: ['L', true],
-        parent: '#tools_line', prepend: true},
-      {sel: '#tool_rect', fn: clickRect, evt: 'mouseup',
-        key: ['R', true], parent: '#tools_rect', icon: 'rect'},
-      {sel: '#tool_square', fn: clickSquare, evt: 'mouseup',
-        parent: '#tools_rect', icon: 'square'},
-      {sel: '#tool_fhrect', fn: clickFHRect, evt: 'mouseup',
-        parent: '#tools_rect', icon: 'fh_rect'},
-      {sel: '#tool_ellipse', fn: clickEllipse, evt: 'mouseup',
-        key: ['E', true], parent: '#tools_ellipse', icon: 'ellipse'},
-      {sel: '#tool_circle', fn: clickCircle, evt: 'mouseup',
-        parent: '#tools_ellipse', icon: 'circle'},
-      {sel: '#tool_fhellipse', fn: clickFHEllipse, evt: 'mouseup',
-        parent: '#tools_ellipse', icon: 'fh_ellipse'},
+      {
+        sel: '#tool_line', fn: clickLine, evt: 'click', key: ['L', true],
+        parent: '#tools_line', prepend: true
+      },
+      {
+        sel: '#tool_rect', fn: clickRect, evt: 'mouseup',
+        key: ['R', true], parent: '#tools_rect', icon: 'rect'
+      },
+      {
+        sel: '#tool_square', fn: clickSquare, evt: 'mouseup',
+        parent: '#tools_rect', icon: 'square'
+      },
+      {
+        sel: '#tool_fhrect', fn: clickFHRect, evt: 'mouseup',
+        parent: '#tools_rect', icon: 'fh_rect'
+      },
+      {
+        sel: '#tool_ellipse', fn: clickEllipse, evt: 'mouseup',
+        key: ['E', true], parent: '#tools_ellipse', icon: 'ellipse'
+      },
+      {
+        sel: '#tool_circle', fn: clickCircle, evt: 'mouseup',
+        parent: '#tools_ellipse', icon: 'circle'
+      },
+      {
+        sel: '#tool_fhellipse', fn: clickFHEllipse, evt: 'mouseup',
+        parent: '#tools_ellipse', icon: 'fh_ellipse'
+      },
       {sel: '#tool_path', fn: clickPath, evt: 'click', key: ['P', true]},
       {sel: '#tool_text', fn: clickText, evt: 'click', key: ['T', true]},
       {sel: '#tool_image', fn: clickImage, evt: 'mouseup'},
       {sel: '#tool_zoom', fn: clickZoom, evt: 'mouseup', key: ['Z', true]},
       {sel: '#tool_clear', fn: clickClear, evt: 'mouseup', key: ['N', true]},
-      {sel: '#tool_save', fn () {
-        if (editingsource) {
-          saveSourceEditor();
-        } else {
-          clickSave();
-        }
-      }, evt: 'mouseup', key: ['S', true]},
+      {
+        sel: '#tool_save', fn () {
+          if (editingsource) {
+            saveSourceEditor();
+          } else {
+            clickSave();
+          }
+        }, evt: 'mouseup', key: ['S', true]
+      },
       {sel: '#tool_export', fn: clickExport, evt: 'mouseup'},
       {sel: '#tool_open', fn: clickOpen, evt: 'mouseup', key: ['O', true]},
       {sel: '#tool_import', fn: clickImport, evt: 'mouseup'},
@@ -5341,8 +5184,10 @@ editor.init = function () {
         },
         hidekey: true
       },
-      {sel: dialogSelectors.join(','), fn: cancelOverlays, evt: 'click',
-        key: ['esc', false, false], hidekey: true},
+      {
+        sel: dialogSelectors.join(','), fn: cancelOverlays, evt: 'click',
+        key: ['esc', false, false], hidekey: true
+      },
       {sel: '#tool_source_save', fn: saveSourceEditor, evt: 'click'},
       {sel: '#tool_docprops_save', fn: saveDocProperties, evt: 'click'},
       {sel: '#tool_docprops', fn: showDocProperties, evt: 'click'},
@@ -5351,8 +5196,10 @@ editor.init = function () {
       {sel: '#tool_editor_homepage', fn: openHomePage, evt: 'click'},
       {sel: '#tool_open', fn () { window.dispatchEvent(new CustomEvent('openImage')); }, evt: 'click'},
       {sel: '#tool_import', fn () { window.dispatchEvent(new CustomEvent('importImage')); }, evt: 'click'},
-      {sel: '#tool_delete,#tool_delete_multi', fn: deleteSelected,
-        evt: 'click', key: ['del/backspace', true]},
+      {
+        sel: '#tool_delete,#tool_delete_multi', fn: deleteSelected,
+        evt: 'click', key: ['del/backspace', true]
+      },
       {sel: '#tool_reorient', fn: reorientPath, evt: 'click'},
       {sel: '#tool_node_link', fn: linkControlPoints, evt: 'click'},
       {sel: '#tool_node_clone', fn: clonePathNode, evt: 'click'},
@@ -5640,13 +5487,19 @@ editor.init = function () {
     }
   };
 
-  initSpinButton({id: 'rect_rx', min: 0, max: 1000, callback: changeRectRadius});
-  initSpinButton({id: 'stroke_width', min: 0, max: 99, step: 0.1, callback: changeStrokeWidth});
-  initSpinButton({id: 'angle', min: -180, max: 180, step: 5, callback: changeRotationAngle});
-  initSpinButton({id: 'font_size', min: 0.001, stepfunc: stepFontSize, callback: changeFontSize});
-  initSpinButton({id: 'group_opacity', min: 0, max: 100, step: 5, callback: changeOpacity});
-  initSpinButton({id: 'blur', min: 0, max: 10, step: 0.1, callback: changeBlur});
-  initSpinButton({id: 'zoom', min: 10, max: 10000, step: 10, callback: changeZoom, defaultValue: svgCanvas.getZoom() * 100});
+  initSpinButton({id: 'rect_rx', min: 0, max: 1000, callback: (evt) => changeRectRadius(evt.target.value)});
+  initSpinButton({id: 'stroke_width', min: 0, max: 99, step: 0.1, callback: (evt) => changeStrokeWidth(evt.target.value)});
+  initSpinButton({id: 'angle', min: -180, max: 180, step: 5, callback: (evt) => changeRotationAngle(evt.target.value)});
+  initSpinButton({id: 'font_size', min: 0.001, stepfunc: stepFontSize, callback: (evt) => changeFontSize(evt.target.value)});
+  initSpinButton({id: 'group_opacity', min: 0, max: 100, step: 5, callback: (evt) => changeOpacity(evt.target.value)});
+  initSpinButton({id: 'blur', min: 0, max: 10, step: 0.1, callback: (evt) => changeBlur(evt.target.value)});
+  initSpinButton({
+    id: 'zoom',
+    min: 10,
+    max: 10000,
+    step: 10,
+    callback: (evt) => changeZoom(evt.target.value / 100),
+    defaultValue: svgCanvas.getZoom() * 100});
 
   $('#workarea').contextMenu(
     {
@@ -5755,7 +5608,7 @@ editor.init = function () {
     let svgeditClipboard;
     try {
       svgeditClipboard = localStorage.getItem('svgedit_clipboard');
-    } catch (err) {}
+    } catch (err) { }
     canvMenu[(svgeditClipboard ? 'en' : 'dis') + 'ableContextMenuItems'](
       '#paste,#paste_in_place'
     );
