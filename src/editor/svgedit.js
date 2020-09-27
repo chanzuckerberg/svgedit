@@ -25,7 +25,7 @@ import {isWebkit, isChrome, isGecko, isIE, isMac, isTouch} from '../common/brows
 
 // Until we split this into smaller files, this helps distinguish utilities
 //   from local methods
-import * as Utils from '../common/utilities.js';
+import * as utils from '../common/utilities.js';
 import {getTypeMap, convertUnit, isValidUnit} from '../common/units.js';
 import {
   hasCustomHandler, getCustomHandler, injectExtendedContextMenuItemsIntoDom
@@ -47,10 +47,9 @@ import {
   setStrings
 } from './locale.js';
 
-const {$q} = Utils;
+const {$q, $id} = utils;
 
 const editor = {};
-
 const $ = [
   jQueryPluginJSHotkeys, jQueryPluginSVGIcons, jQueryPluginJGraduate,
   jQueryPluginSVG, jQueryPluginContextMenu, jQueryPluginJPicker
@@ -412,7 +411,7 @@ editor.loadContentAndPrefs = function () {
       defaultPrefs[key] = window.widget.preferenceForKey(storeKey);
     } else {
       const result = document.cookie.match(
-        new RegExp('(?:^|;\\s*)' + Utils.regexEscape(
+        new RegExp('(?:^|;\\s*)' + utils.regexEscape(
           encodeURIComponent(storeKey)
         ) + '=([^;]+)')
       );
@@ -870,7 +869,7 @@ editor.init = function () {
       for (let i = 0; i < 4; i++) {
         const s = sides[i];
         let cur = el.data('orig_margin-' + s);
-        if (Utils.isNullish(cur)) {
+        if (utils.isNullish(cur)) {
           cur = Number.parseInt(el.css('margin-' + s));
           // Cache the original margin
           el.data('orig_margin-' + s, cur);
@@ -1220,7 +1219,7 @@ editor.init = function () {
   * @type {module:svgcanvas.SvgCanvas}
   */
   editor.canvas = svgCanvas = new SvgCanvas(
-    document.getElementById('svgcanvas'),
+    $id('svgcanvas'),
     curConfig
   );
   const palette = [
@@ -1466,7 +1465,7 @@ editor.init = function () {
     // Since saving SVGs by opening a new window was removed in Chrome use artificial link-click
     // https://stackoverflow.com/questions/45603201/window-is-not-allowed-to-navigate-top-frame-navigations-to-data-urls
     const a = document.createElement('a');
-    a.href = 'data:image/svg+xml;base64,' + Utils.encode64(svg);
+    a.href = 'data:image/svg+xml;base64,' + utils.encode64(svg);
     a.download = 'icon.svg';
     a.style.display = 'none';
     document.body.append(a); // Need to append for Firefox
@@ -1507,7 +1506,7 @@ editor.init = function () {
   const exportHandler = function (win, data) {
     const {issues, exportWindowName} = data;
 
-    exportWindow = window.open(Utils.blankPageObjectURL || '', exportWindowName); // A hack to get the window via JSON-able name without opening a new one
+    exportWindow = window.open(utils.blankPageObjectURL || '', exportWindowName); // A hack to get the window via JSON-able name without opening a new one
 
     if (!exportWindow || exportWindow.closed) {
       /* await */ $.alert(uiStrings.notification.popupWindowBlocked);
@@ -1985,7 +1984,7 @@ editor.init = function () {
   */
   const updateToolbar = function () {
     let i, len;
-    if (!Utils.isNullish(selectedElement)) {
+    if (!utils.isNullish(selectedElement)) {
       switch (selectedElement.tagName) {
       case 'use':
       case 'image':
@@ -2037,10 +2036,10 @@ editor.init = function () {
     // All elements including image and group have opacity
     if (selectedElement) {
       const opacPerc = (selectedElement.getAttribute('opacity') || 1.0) * 100;
-      document.getElementById('group_opacity').value = opacPerc;
-      document.getElementById('opac_slider').value = opacPerc;
-      document.getElementById('elem_id').value = selectedElement.id;
-      document.getElementById('elem_class').value = selectedElement.getAttribute('class');
+      $id('group_opacity').value = opacPerc;
+      $id('opac_slider').value = opacPerc;
+      $id('elem_id').value = selectedElement.id;
+      $id('elem_class').value = selectedElement.getAttribute('class');
     }
 
     updateToolButtonState();
@@ -2053,7 +2052,7 @@ editor.init = function () {
   const updateContextPanel = function () {
     let elem = selectedElement;
     // If element has just been deleted, consider it null
-    if (!Utils.isNullish(elem) && !elem.parentNode) { elem = null; }
+    if (!utils.isNullish(elem) && !elem.parentNode) { elem = null; }
     const currentLayerName = svgCanvas.getCurrentDrawing().getCurrentLayerName();
     const currentMode = svgCanvas.getMode();
     const unit = curConfig.baseUnit !== 'px' ? curConfig.baseUnit : null;
@@ -2063,7 +2062,7 @@ editor.init = function () {
     $('#selected_panel, #multiselected_panel, #g_panel, #rect_panel, #circle_panel,' +
       '#ellipse_panel, #line_panel, #text_panel, #image_panel, #container_panel,' +
       ' #use_panel, #a_panel').hide();
-    if (!Utils.isNullish(elem)) {
+    if (!utils.isNullish(elem)) {
       const elname = elem.nodeName;
       // If this is a link with no transform and one child, pretend
       // its child is selected
@@ -2076,7 +2075,7 @@ editor.init = function () {
 
       const blurval = svgCanvas.getBlur(elem);
       $('#blur').val(blurval);
-      document.getElementById('blur_slider').value = blurval;
+      $id('blur_slider').value = blurval;
 
       if (svgCanvas.addedNew) {
         if (elname === 'image' && svgCanvas.getMode() === 'image') {
@@ -2317,9 +2316,9 @@ editor.init = function () {
     }
     const isNode = mode === 'pathedit';
     // if elems[1] is present, then we have more than one element
-    selectedElement = (elems.length === 1 || Utils.isNullish(elems[1]) ? elems[0] : null);
-    multiselected = (elems.length >= 2 && !Utils.isNullish(elems[1]));
-    if (!Utils.isNullish(selectedElement)) {
+    selectedElement = (elems.length === 1 || utils.isNullish(elems[1]) ? elems[0] : null);
+    multiselected = (elems.length >= 2 && !utils.isNullish(elems[1]));
+    if (!utils.isNullish(selectedElement)) {
       // unless we're already in always set the mode of the editor to select because
       // upon creation of a text element the editor is switched into
       // select mode and this event fires - we need our UI to be in sync
@@ -2356,7 +2355,7 @@ editor.init = function () {
       return;
     }
 
-    multiselected = (elems.length >= 2 && !Utils.isNullish(elems[1]));
+    multiselected = (elems.length >= 2 && !utils.isNullish(elems[1]));
     // Only updating fields for single elements for now
     if (!multiselected) {
       switch (mode) {
@@ -2412,7 +2411,7 @@ editor.init = function () {
         }
         // Update selectedElement if element is no longer part of the image.
         // This occurs for the text elements in Firefox
-      } else if (elem && selectedElement && Utils.isNullish(selectedElement.parentNode)) {
+      } else if (elem && selectedElement && utils.isNullish(selectedElement.parentNode)) {
         // || elem && elem.tagName == "path" && !multiselected) { // This was added in r1430, but not sure why
         selectedElement = elem;
       }
@@ -3281,13 +3280,14 @@ editor.init = function () {
   };
 
   const changeOpacity = (value) => {
-    document.getElementById('group_opacity').value = value;
-    document.getElementById('opac_slider').value = value;
+    if (!value) return;
+    $id('group_opacity').value = value;
+    $id('opac_slider').value = value;
     svgCanvas.setOpacity(value / 100);
   };
 
   const changeBlur = (value) => {
-    document.getElementById('blur').value = value;
+    $id('blur').value = value;
     svgCanvas.setBlur(value, true);
   };
 
@@ -3574,30 +3574,25 @@ editor.init = function () {
 
   editor.addDropDown = addDropDown;
 
-  editor.addDropDown(document.getElementById('font_family_dropdown'), () => {
+  editor.addDropDown($id('font_family_dropdown'), () => {
     $('#font_family').val($(this).text()).change();
   });
 
-  editor.addDropDown(document.getElementById('opacity_dropdown'), (ev) => {
+  editor.addDropDown($id('opacity_dropdown'), (ev) => {
     const perc = Number.parseInt(ev.srcElement.textContent.split('%')[0]);
     changeOpacity(perc);
   }, true);
 
-  document.getElementById('opac_slider').addEventListener('change', (evt) => changeOpacity(evt.target.value));
+  $id('opac_slider').addEventListener('change', (evt) => {
+    evt.preventDefault();
+    changeOpacity(evt.target.value);
+  });
 
-  editor.addDropDown(document.getElementById('blur_dropdown'), $.noop);
+  editor.addDropDown($id('blur_dropdown'), () => { /* do nothing */ });
 
-  $('#blur_slider').slider({
-    max: 10,
-    step: 0.1,
-    stop (evt, ui) {
-      changeBlur(ui);
-      $('#blur_dropdown li').show();
-      $(window).mouseup();
-    },
-    slide (evt, ui) {
-      changeBlur(ui);
-    }
+  $id('blur_slider').addEventListener('change', (evt) => {
+    evt.preventDefault();
+    changeBlur(evt.target.value);
   });
 
   editor.addDropDown(document.getElementById('zoom_dropdown'), (ev) => {
@@ -3815,7 +3810,7 @@ editor.init = function () {
   * @returns {void}
   */
   const deleteSelected = function () {
-    if (!Utils.isNullish(selectedElement) || multiselected) {
+    if (!utils.isNullish(selectedElement) || multiselected) {
       svgCanvas.deleteSelectedElements();
     }
   };
@@ -3825,7 +3820,7 @@ editor.init = function () {
   * @returns {void}
   */
   const cutSelected = function () {
-    if (!Utils.isNullish(selectedElement) || multiselected) {
+    if (!utils.isNullish(selectedElement) || multiselected) {
       svgCanvas.cutSelectedElements();
     }
   };
@@ -3835,7 +3830,7 @@ editor.init = function () {
   * @returns {void}
   */
   const copySelected = function () {
-    if (!Utils.isNullish(selectedElement) || multiselected) {
+    if (!utils.isNullish(selectedElement) || multiselected) {
       svgCanvas.copySelectedElements();
     }
   };
@@ -3856,7 +3851,7 @@ editor.init = function () {
   * @returns {void}
   */
   const moveToTopSelected = function () {
-    if (!Utils.isNullish(selectedElement)) {
+    if (!utils.isNullish(selectedElement)) {
       svgCanvas.moveToTopSelectedElement();
     }
   };
@@ -3866,7 +3861,7 @@ editor.init = function () {
   * @returns {void}
   */
   const moveToBottomSelected = function () {
-    if (!Utils.isNullish(selectedElement)) {
+    if (!utils.isNullish(selectedElement)) {
       svgCanvas.moveToBottomSelectedElement();
     }
   };
@@ -3876,7 +3871,7 @@ editor.init = function () {
   * @returns {void}
   */
   const moveUpDownSelected = function (dir) {
-    if (!Utils.isNullish(selectedElement)) {
+    if (!utils.isNullish(selectedElement)) {
       svgCanvas.moveUpDownSelected(dir);
     }
   };
@@ -3886,7 +3881,7 @@ editor.init = function () {
   * @returns {void}
   */
   const convertToPath = function () {
-    if (!Utils.isNullish(selectedElement)) {
+    if (!utils.isNullish(selectedElement)) {
       svgCanvas.convertToPath();
     }
   };
@@ -3896,7 +3891,7 @@ editor.init = function () {
   * @returns {void}
   */
   const reorientPath = function () {
-    if (!Utils.isNullish(selectedElement)) {
+    if (!utils.isNullish(selectedElement)) {
       path.reorient();
     }
   };
@@ -3906,7 +3901,7 @@ editor.init = function () {
   * @returns {Promise<void>} Resolves to `undefined`
   */
   const makeHyperlink = async function () {
-    if (!Utils.isNullish(selectedElement) || multiselected) {
+    if (!utils.isNullish(selectedElement) || multiselected) {
       const url = await $.prompt(uiStrings.notification.enterNewLinkURL, 'http://');
       if (url) {
         svgCanvas.makeHyperlink(url);
@@ -3920,7 +3915,7 @@ editor.init = function () {
   * @returns {void}
   */
   const moveSelected = function (dx, dy) {
-    if (!Utils.isNullish(selectedElement) || multiselected) {
+    if (!utils.isNullish(selectedElement) || multiselected) {
       if (curConfig.gridSnapping) {
         // Use grid snap value regardless of zoom level
         const multi = svgCanvas.getZoom() * curConfig.snappingStep;
@@ -4002,7 +3997,7 @@ editor.init = function () {
   * @returns {void}
   */
   const rotateSelected = function (cw, step) {
-    if (Utils.isNullish(selectedElement) || multiselected) { return; }
+    if (utils.isNullish(selectedElement) || multiselected) { return; }
     if (!cw) { step *= -1; }
     const angle = Number.parseFloat($('#angle').val()) + step;
     svgCanvas.setRotationAngle(angle);
@@ -4118,7 +4113,7 @@ editor.init = function () {
           const blob = new Blob([popHTML], {type: 'text/html'});
           popURL = URL.createObjectURL(blob);
         } else {
-          popURL = 'data:text/html;base64;charset=utf-8,' + Utils.encode64(popHTML);
+          popURL = 'data:text/html;base64;charset=utf-8,' + utils.encode64(popHTML);
         }
         loadingURL = popURL;
       }
@@ -4567,7 +4562,7 @@ editor.init = function () {
     ];
     let i = shortcutButtons.length;
     while (i--) {
-      const button = document.getElementById(shortcutButtons[i]);
+      const button = $id(shortcutButtons[i]);
       if (button) {
         const {title} = button;
         const index = title.indexOf('Ctrl+');
@@ -5476,7 +5471,7 @@ editor.init = function () {
   });
 
   const initSpinButton = ({id, min, max, step, callback, defaultValue}) => {
-    const element = document.getElementById(id);
+    const element = $id(id);
     element.addEventListener('change', callback);
     element.setAttribute('type', 'number');
     element.setAttribute('min', min);
@@ -6016,7 +6011,7 @@ editor.loadFromDataURI = function (str, {noAlert} = {}) {
       pre = pre[0];
     }
     const src = str.slice(pre.length);
-    return loadSvgString(base64 ? Utils.decode64(src) : decodeURIComponent(src), {noAlert});
+    return loadSvgString(base64 ? utils.decode64(src) : decodeURIComponent(src), {noAlert});
   });
 };
 

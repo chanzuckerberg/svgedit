@@ -3,10 +3,6 @@ import {
 } from '../../support/ui-test-helper.js';
 
 const testSnapshot = () => {
-  // cy.get('#tool_source').click({force: true});
-  // cy.get('#svg_source_textarea').invoke('val').toMatchSnapshot();
-  // cy.get('#tool_source_save').click({force: true});
-  // remove attribute style causing tests to fail when auto
   cy.get('#svgcontent').invoke('attr', 'style', '').toMatchSnapshot();
 };
 
@@ -36,7 +32,7 @@ describe('use various parts of svg-edit', function () {
       .trigger('mousedown', 200, 200, {force: true})
       .trigger('mousemove', 20, 20, {force: true})
       .trigger('mouseup', {force: true});
-    cy.get('#svgcontent').toMatchSnapshot();
+    testSnapshot();
   });
   it('check tool_text', function () {
     cy.get('#tool_text')
