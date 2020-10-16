@@ -157,7 +157,6 @@ const callbacks = [],
   * @property {string} [canvasName="default"] Used to namespace storage provided via `ext-storage.js`; you can use this if you wish to have multiple independent instances of SVG Edit on the same domain
   * @property {boolean} [no_save_warning=false] If `true`, prevents the warning dialog box from appearing when closing/reloading the page. Mostly useful for testing.
   * @property {string} [imgPath="images/"] The path where the SVG icons are located, with trailing slash. Note that as of version 2.7, this is not configurable by URL for security reasons.
-  * @property {string} [extPath="extensions/"] The path used for extension files, with trailing slash. Note that as of version 2.7, this is not configurable by URL for security reasons.
   * @property {boolean} [preventAllURLConfig=false] Set to `true` to override the ability for URLs to set non-content configuration (including extension config). Must be set early, i.e., in `svgedit-config-iife.js`; extension loading is too late!
   * @property {boolean} [preventURLContentLoading=false] Set to `true` to override the ability for URLs to set URL-based SVG content. Must be set early, i.e., in `svgedit-config-iife.js`; extension loading is too late!
   * @property {boolean} [lockExtensions=false] Set to `true` to override the ability for URLs to set their own extensions; disallowed in URL setting. There is no need for this when `preventAllURLConfig` is used. Must be set early, i.e., in `svgedit-config-iife.js`; extension loading is too late!
@@ -231,7 +230,6 @@ const callbacks = [],
     no_save_warning: false,
     // PATH CONFIGURATION
     // The following path configuration items are disallowed in the URL (as should any future path configurations)
-    extPath: './extensions/',
     imgPath: './images/',
     // DOCUMENT PROPERTIES
     // Change the following to a preference (already in the Document Properties dialog)?
@@ -279,6 +277,7 @@ let svgCanvas, urldata = {},
     // We do not put on defaultConfig to simplify object copying
     //   procedures (we obtain instead from defaultExtensions)
     extensions: [],
+    userExtensions: [],
     /**
     * Can use `location.origin` to indicate the current
     * origin. Can contain a '*' to allow all domains or 'null' (as
@@ -302,22 +301,14 @@ let svgCanvas, urldata = {},
  * @param {PlainObject} [opts={}]
  * @param {boolean} [opts.noAlert]
  * @throws {Error} Upon failure to load SVG
- * @returns {Promise<void>} Resolves to undefined upon success (or if `noAlert` is
- *   falsey, though only until after the `alert` is closed); rejects if SVG
- *   loading fails and `noAlert` is truthy.
  */
-async function loadSvgString (str, {noAlert} = {}) {
+const loadSvgString = (str, {noAlert} = {}) => {
   const success = svgCanvas.setSvgString(str) !== false;
-  if (success) {
-    return;
-  }
-
-  if (!noAlert) {
-    await $.alert(uiStrings.notification.errorLoadingSVG);
-    return;
-  }
+  if (success) return;
+  // eslint-disable-next-line no-alert
+  if (!noAlert) window.alert(uiStrings.notification.errorLoadingSVG);
   throw new Error('Error loading SVG');
-}
+};
 
 /**
 * EXPORTS.
@@ -471,7 +462,7 @@ editor.setConfig = function (opts, cfgCfg) {
       } else {
         editor.pref(key, val);
       }
-    } else if (['extensions', 'allowedOrigins'].includes(key)) {
+    } else if (['extensions', 'userExtensions', 'allowedOrigins'].includes(key)) {
       if (cfgCfg.overwrite === false &&
         (
           curConfig.preventAllURLConfig ||
@@ -594,7 +585,7 @@ editor.setCustomHandlers = function (opts) {
  * @param {boolean} arg
  * @returns {void}
  */
-editor.randomizeIds = function (arg) {
+editor.randomizeIds = (arg) => {
   svgCanvas.randomizeIds(arg);
 };
 
@@ -603,7 +594,7 @@ editor.randomizeIds = function (arg) {
 * @function module:SVGEditor.init
 * @returns {void}
 */
-editor.init = function () {
+editor.init = () => {
   // const host = location.hostname,
   //  onWeb = host && host.includes('.');
   // Some FF versions throw security errors here when directly accessing
@@ -622,18 +613,15 @@ editor.init = function () {
     }
   } catch (err) { }
 
-  // Todo: Avoid const-defined functions and group functions together, etc. where possible
-  const goodLangs = [];
-  $('#lang_select option').each(function () {
-    goodLangs.push(this.value);
-  });
+  // get list of languages from options in the HTML
+  const goodLangs = [...document.querySelectorAll('#lang_select option')].map((option) => option.value);
 
   /**
    * Sets up current preferences based on defaults.
    * @returns {void}
    */
   function setupCurPrefs () {
-    curPrefs = $.extend(true, {}, defaultPrefs, curPrefs); // Now safe to merge with priority for curPrefs in the event any are already set
+    curPrefs = {...defaultPrefs, ...curPrefs}; // Now safe to merge with priority for curPrefs in the event any are already set
     // Export updated prefs
     editor.curPrefs = curPrefs;
   }
@@ -643,7 +631,7 @@ editor.init = function () {
    * @returns {void}
    */
   function setupCurConfig () {
-    curConfig = $.extend(true, {}, defaultConfig, curConfig); // Now safe to merge with priority for curConfig in the event any are already set
+    curConfig = {...defaultConfig, ...curConfig}; // Now safe to merge with priority for curConfig in the event any are already set
 
     // Now deal with extensions and other array config
     if (!curConfig.noDefaultExtensions) {
@@ -693,7 +681,7 @@ editor.init = function () {
       // security reasons, even for same-domain
       // ones given potential to interact in undesirable
       // ways with other script resources
-      ['extPath', 'imgPath']
+      ['userExtensions', 'imgPath']
         .forEach(function (pathConfig) {
           if (urldata[pathConfig]) {
             delete urldata[pathConfig];
@@ -754,6 +742,7 @@ editor.init = function () {
     setIcons(); // Wait for dbox as needed for i18n
 
     try {
+      // load standard extensions
       await Promise.all(
         curConfig.extensions.map(async (extname) => {
           /**
@@ -766,13 +755,35 @@ editor.init = function () {
             /**
              * @type {module:SVGEditor.ExtensionObject}
              */
-            const url = `${curConfig.extPath}${extname}/${extname}.js`;
-            const imported = await import(url);
+            const imported = await import(`./extensions/${encodeURIComponent(extname)}/${encodeURIComponent(extname)}.js`);
             const {name = extname, init} = imported.default;
             return editor.addExtension(name, (init && init.bind(editor)), {$, langParam});
           } catch (err) {
             // Todo: Add config to alert any errors
             console.error('Extension failed to load: ' + extname + '; ', err); // eslint-disable-line no-console
+            return undefined;
+          }
+        })
+      );
+      // load user extensions (given as pathNames)
+      await Promise.all(
+        curConfig.userExtensions.map(async (extPathName) => {
+          /**
+           * @tutorial ExtensionDocs
+           * @typedef {PlainObject} module:SVGEditor.ExtensionObject
+           * @property {string} [name] Name of the extension. Used internally; no need for i18n. Defaults to extension name without beginning "ext-" or ending ".js".
+           * @property {module:svgcanvas.ExtensionInitCallback} [init]
+           */
+          try {
+            /**
+             * @type {module:SVGEditor.ExtensionObject}
+             */
+            const imported = await import(encodeURI(extPathName));
+            const {name, init} = imported.default;
+            return editor.addExtension(name, (init && init.bind(editor)), {$, langParam});
+          } catch (err) {
+            // Todo: Add config to alert any errors
+            console.error('Extension failed to load: ' + extPathName + '; ', err); // eslint-disable-line no-console
             return undefined;
           }
         })
@@ -4149,7 +4160,7 @@ editor.init = function () {
   * @returns {void}
   */
   const clickImport = function () {
-    /* */
+    /* empty fn */
   };
 
   /**
@@ -5425,19 +5436,20 @@ editor.init = function () {
 
   // Select given tool
   editor.ready(function () {
-    let tool;
-    const itool = curConfig.initTool,
-      container = $('#tools_left, #svg_editor .tools_flyout'),
-      preTool = container.find('#tool_' + itool),
-      regTool = container.find('#' + itool);
-    if (preTool.length) {
-      tool = preTool;
-    } else if (regTool.length) {
-      tool = regTool;
+    const preTool = document.getElementById(`tool_${curConfig.initTool}`);
+    const regTool = document.getElementById(curConfig.initTool);
+    const selectTool = document.getElementById('tool_select');
+    const mouseupEvent = new Event('mouseup');
+    if (preTool) {
+      preTool.click();
+      preTool.dispatchEvent(mouseupEvent);
+    } else if (regTool) {
+      regTool.click();
+      regTool.dispatchEvent(mouseupEvent);
     } else {
-      tool = $('#tool_select');
+      selectTool.click();
+      selectTool.dispatchEvent(mouseupEvent);
     }
-    tool.click().mouseup();
 
     if (curConfig.wireframe) {
       $('#tool_wireframe').click();
@@ -5969,11 +5981,11 @@ editor.loadFromURL = function (url, {cache, noAlert} = {}) {
           $.process_cancel(uiStrings.notification.loadingImage);
         },
         success (str) {
-          resolve(loadSvgString(str, {noAlert}));
+          loadSvgString(str, {noAlert});
         },
         error (xhr, stat, err) {
           if (xhr.status !== 404 && xhr.responseText) {
-            resolve(loadSvgString(xhr.responseText, {noAlert}));
+            loadSvgString(xhr.responseText, {noAlert});
             return;
           }
           if (noAlert) {

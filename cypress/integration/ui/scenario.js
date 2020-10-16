@@ -3,7 +3,7 @@ import {
 } from '../../support/ui-test-helper.js';
 
 const testSnapshot = () => {
-  cy.get('#svgcontent').invoke('attr', 'style', '').toMatchSnapshot();
+  cy.get('#svgcontent').cleanSnapshot();
 };
 
 describe('use various parts of svg-edit', function () {
