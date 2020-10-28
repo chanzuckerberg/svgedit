@@ -23,5 +23,23 @@ npm run start-allow-origin
 
 Point your web browser to http://127.0.0.1:8001/dist/editor/test-xdomain.html
 
+## Deployment Flow
+
+The flow is for deploying build files to S3
+
+```
+# generate files at dist directory
+npm build
+
+# copy files to S3
+# `your_s3_location_key` should be replaced by something like `your_bucket_name/your_s3_key`
+aws s3 cp dist/editor s3://<your_s3_location_key> --recursive --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+
+```
+
+Go to your S3 Admin console, make sure that these files are public.
+
+
+
 
 

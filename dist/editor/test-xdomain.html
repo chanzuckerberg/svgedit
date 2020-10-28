@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Embedded Editor with Cross-Domain Communication</title>
+    <style>
+      body,
+      html {
+        border: none;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        width: 100vw;
+      }
+
+      .main {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      .toolbar {
+        background: #222;
+        flex: 0;
+      }
+      
+      .content {
+        background: #ccc;
+        display: block;
+        flex: 1;
+        position: relative;
+      }
+
+      #editor {
+        background: #ccc;
+        border: none;
+        height: 100%;
+        margin: 0;
+        position: absolute;
+        width: 100%;
+      }
+    </style>
+    <script src="test-xdomain.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="toolbar">
+        <button id="export-button">Export</button>
+        <button id="import-button">Import</button>
+        <button id="import-default-button">Import Default</button>
+        <button id="clear-button">Clear</button>
+      </div>
+      <div class="content">
+        <iframe id="editor"></iframe>
+      </div>
+    </div>
+  </body>
+</html>
