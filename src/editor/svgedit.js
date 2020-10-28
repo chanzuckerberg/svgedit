@@ -139,8 +139,10 @@ const callbacks = [],
     'ext-panning',
     'ext-polygon',
     'ext-shapes',
-    'ext-star',
-    'ext-storage'
+    'ext-star'
+    // CZI:: 'ext-storage' is disabled to avoid using localStore that can't
+    // work properly across domains.
+    // 'ext-storage'
   ],
   /**
   * @typedef {"@default"|string} module:SVGEditor.Stylesheet `@default` will automatically load all of the default CSS paths for SVGEditor

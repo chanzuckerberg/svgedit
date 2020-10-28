@@ -98,7 +98,10 @@ const config = [{
         {src: 'src/editor/embedapi.js', dest},
         {src: 'src/editor/browser-not-supported.html', dest},
         {src: 'src/editor/redirect-on-lacking-support.js', dest},
-        {src: 'src/editor/svgedit.css', dest}
+        {src: 'src/editor/svgedit.css', dest},
+        // Added by CZI.
+        {src: 'src/editor/test-xdomain.html', dest: 'dist/editor'},
+        {src: 'src/editor/test-xdomain.js', dest: 'dist/editor'}
       ]
     }),
     nodeResolve({
