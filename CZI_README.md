@@ -3,9 +3,40 @@
 This repository forked from https://github.com/SVG-Edit/svgedit, 
 It contains branch with custom UI and features that are not available in the original repository.
 
-## Development Flow
 
-The flow is for developing locally from your computer so you could test the embedded editor that use cross-domain communication between http://127.0.0.1 and http://localhost. 
+## Development for UI changes
+
+
+```
+# Get the repository and enter the project folder
+git clone https://github.com/chanzuckerberg/svgedit
+
+# Enter the project folder
+cd svgedit
+
+# Start the dev server
+npm run start
+
+```
+
+Now open your browser to http://localhost:8000/src/editor/
+Note that the trailing `/` is required.
+
+Try edit JavaScript / CSS / HTML files inside the `src` directory, and reload the browser to see the changes.
+
+## Development for Embedded Editor (with Cross-Domain communication APIs).
+
+The editor will be published and should be used as a standalone full-page app embedded within an iframe element like the snippet below.
+
+```
+<iframe src="`http://your.site.com?extensions=ext-xdomain-messaging`"></iframe>
+```
+
+The containing app will use HTML5 `postMessage` APIs to interact with the editor. 
+
+It's important that the editor can be safely embedded while being accessible by its containing app from different domain.
+
+The flow demostartes how to develop locally from your computer so you could test the embedded editor that uses cross-domain communication between http://127.0.0.1 and http://localhost. 
 
 ```
 # Get the repository and enter the project folder
@@ -23,21 +54,28 @@ npm run start-allow-origin
 
 Point your web browser to http://127.0.0.1:8001/dist/editor/test-xdomain.html
 
-## Deployment Flow
+## Deployment to S3 Flow 
 
-The flow is for deploying build files to S3
+The flow is for deploying build files to S3.
 
 ```
-# generate files at dist directory
+# Get the repository and enter the project folder
+git clone https://github.com/chanzuckerberg/svgedit
+
+# Enter the project folder
+cd svgedit
+
+# generate files at dist directory, note that this will take a while.
 npm build
 
 # copy files to S3
 # `your_s3_location_key` should be replaced by something like `your_bucket_name/your_s3_key`
+
 aws s3 cp dist/editor s3://<your_s3_location_key> --recursive --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
 ```
 
-Go to your S3 Admin console, make sure that these files are public.
+Once you have uploaded all the files, go to your S3 Admin console, make sure that these files are public.
 
 
 
