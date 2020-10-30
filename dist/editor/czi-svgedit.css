@@ -1,0 +1,88 @@
+
+/* Disabled features */
+
+#editor_panel,
+#history_panel .tool_sep,
+#main_button,
+#main_menu,
+#sidepanels,
+#tool_editor_homepage,
+#tool_editor_prefs,
+#tool_image,
+#tool_make_link_multi,
+#tool_source,
+#tool_wireframe,
+#view_grid,
+#none {
+  display: none !important;
+}
+
+body {
+  background: #fff;
+}
+
+#svgcanvas {
+  /* overwrites the gradient background */
+  background: rgb(248,249,250);
+}
+
+#rulers > #ruler_x,
+#rulers > #ruler_y {
+  background: #fff;
+}
+
+#tools_top {
+  left: 1px;
+}
+
+#tools_left {
+  background: #fff;
+}
+
+#tools_left .tool_button > img[alt="icon"],
+#tools_left .tool_button_current > img[alt="icon"] {
+  height: 24px;
+  width: 24px;
+}
+
+
+.tool_button, 
+.push_button, 
+.buttonup, 
+.buttondown, 
+.tool_button_current, 
+.push_button_pressed {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.tool_button:hover, 
+.push_button:hover, 
+.buttonup:hover, 
+.buttondown, 
+.tool_button_current, 
+.push_button_pressed {
+  background-color: #eee !important;
+}
+
+.tool_button_current,
+.push_button_pressed,
+.buttondown {
+  -moz-box-shadow: none  !important;
+  -webkit-box-shadow: none  !important;
+  background-color: rgb(232,240,254) !important;
+  box-shadow: none  !important;
+}
+
+#toggle_stroke_tools:before {
+  content: '\25B8';
+  display: block;
+  letter-spacing: 0;
+  padding: 0 0 0 9px;
+}
+
+.expanded #toggle_stroke_tools:before {
+  content: '\25B8';
+  transform: scaleX(-1);
+}

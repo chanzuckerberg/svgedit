@@ -61,7 +61,10 @@ svgEditor.setConfig({
   // exportWindowType: 'new', // 'same'
   // wireframe: false,
   // showlayers: false,
-  // no_save_warning: false,
+
+  // TODO:(CZI): Enable this when development is almost complete.
+  no_save_warning: true
+
   // PATH CONFIGURATION
   // imgPath: 'images/',
   /*

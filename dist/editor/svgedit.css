@@ -973,6 +973,8 @@ span.zoom_tool {
   overflow: visible;
 }
 
+/* Disabled by CZI */
+/*
 @media screen and (max-width:1250px) {
   .expanded #palette_holder {
     left: 560px;
@@ -1014,6 +1016,7 @@ span.zoom_tool {
     height: 30px;
   }
 }
+*/
 
 /*–––––––––––––––––––––––––––––––––––––*/
 

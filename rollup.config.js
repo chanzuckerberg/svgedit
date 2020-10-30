@@ -101,7 +101,8 @@ const config = [{
         {src: 'src/editor/svgedit.css', dest},
         // Added by CZI.
         {src: 'src/editor/test-xdomain.html', dest: 'dist/editor'},
-        {src: 'src/editor/test-xdomain.js', dest: 'dist/editor'}
+        {src: 'src/editor/test-xdomain.js', dest: 'dist/editor'},
+        {src: 'src/editor/czi-svgedit.css', dest},
       ]
     }),
     nodeResolve({
