@@ -24,7 +24,7 @@
 #tool_make_link,
 #tool_link_url,
 #none {
-  display: none !important;
+  /* display: none !important; */
 }
 
 body {
@@ -42,7 +42,7 @@ body {
 }
 
 #tools_top {
-  left: 1px;
+  /* left: 1px; */
 }
 
 #tools_left {
@@ -95,4 +95,14 @@ body {
 .expanded #toggle_stroke_tools:before {
   content: '\25B8';
   transform: scaleX(-1);
+}
+
+INPUT.spin-button,
+INPUT.spin-button:hover,
+INPUT.spin-button.up,
+INPUT.spin-button.down {
+  background-image: url('./images/spinner_arrows.svg');
+  background-size: 20px 20px;
+  background-position: right center;
+  background-repeat: no-repeat;
 }
