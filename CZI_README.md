@@ -77,7 +77,9 @@ aws s3 cp dist/editor s3://<your_s3_location_key> --recursive --grants read=uri=
 
 Once you have uploaded all the files, go to your S3 Admin console, make sure that these files are public.
 
+# Editor Guide
 
+http://ehmdunque.altervista.org/i-informatica/manuali/SVG-edit/SVG-Edit_2.6/Short_intro_SVG-edit.html
 
 
 
