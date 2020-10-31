@@ -28,6 +28,9 @@
 #tool_topath,
 #view_grid,
 #xy_panel,
+#tools_rect_show,
+#tools_ellipse_show,
+#tool_eyedropper,
 .tool_sep,
 .noop-none {
   display: none !important;
