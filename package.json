@@ -19,7 +19,7 @@
     "test": "run-s cypress:instrument test-only",
     "build": "rollup -c",
     "build:watch": "rollup -c --watch",
-    "start": "echo \"Open file, e.g., to http://localhost:8000/src/editor\" && es-dev-server",
+    "start": "echo \"Open file, e.g., to http://localhost:8000/src/editor\/\" && es-dev-server",
     "start:watch": "es-dev-server --watch",
     "cypress:open": "run-p start cypress:open-no-start",
     "cypress:open-no-start": "cypress open",
