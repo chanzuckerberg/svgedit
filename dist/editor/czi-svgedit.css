@@ -1,24 +1,46 @@
 
 /* Disabled features */
 
+#classLabel,
 #editor_panel,
 #history_panel .tool_sep,
+#idLabel,
 #main_button,
 #main_menu,
+#mid_marker_label,
+#mid_marker_list,
 #sidepanels,
+#tool_angle,
+#tool_blur,
 #tool_editor_homepage,
 #tool_editor_prefs,
+#tool_fhellipse,
+#tool_fhrect,
 #tool_image,
+#tool_link_url,
+#tool_make_link,
 #tool_make_link_multi,
+#tool_polygon,
+#tool_reorient,
 #tool_source,
+#tool_star,
 #tool_wireframe,
+#tool_topath,
 #view_grid,
-#none {
+#xy_panel,
+.tool_sep,
+.noop-none {
   display: none !important;
 }
 
 body {
   background: #fff;
+}
+
+select {
+  min-height: 22px;
+  padding: 0 10px;
+  vertical-align: baseline;
 }
 
 #svgcanvas {
@@ -85,4 +107,65 @@ body {
 .expanded #toggle_stroke_tools:before {
   content: '\25B8';
   transform: scaleX(-1);
+}
+
+INPUT.spin-button,
+INPUT.spin-button:hover,
+INPUT.spin-button.up,
+INPUT.spin-button.down {
+  background-image: url('./images/spinner_arrows.svg');
+  background-size: 20px 20px;
+  background-position: right center;
+  background-repeat: no-repeat;
+}
+
+
+#palette {
+  display: flex;
+  width: 40vw;
+  max-width: 632px;
+  min-width: 200px;
+}
+
+#palette .palette_item {
+  flex: 1;
+  overflow: hidden;
+}
+
+#palette .palette_item .svg_icon {
+  object-fit: contain;
+  max-width: 100%;
+}
+
+
+#position_opts.optcols3 {
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.2);
+  margin-left: -11px;
+  width: 46px;
+}
+
+#position_opts .push_button,
+#position_opts .push_button_pressed {
+  background-color: #fff;
+  border-width: 0 !important;
+  box-shadow: inset 0 0 0px 0.5px #ccc;
+  display: flex;
+  flex-direction: column;
+  float: none !important;
+  width: auto;  
+}
+
+
+#position_opts .push_button_pressed {
+  box-shadow: inset 0 0 0px 0.5px #aaa;
+}
+
+body * {
+  /* pointer-events: all !important; */
+}
+
+/* selection mask color */
+#selectorRubberBand {
+  fill: #eee !important;
+  stroke: rgb(27,115,232) !important;
 }
