@@ -54,15 +54,12 @@
   </g>
 
   <g id="square">
-    <svg xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <defs>
-        <linearGradient id="svg_2" x1="0.36328" y1="0.10156" x2="1" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="1"/>
-          <stop offset="1" stop-color="#3b7e9b" stop-opacity="1"/>
-        </linearGradient>
-      </defs>
-      <rect x="1.5" y="1.5" width="20" height="20" id="svg_1" fill="url(#svg_2)" stroke="#000000"/>
+    <svg width="24" height="24"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:svg="http://www.w3.org/2000/svg">
+      <g class="layer">
+        <rect fill="#000000" fill-opacity="0" height="17.5" id="svg_1" stroke="#333333" width="17.5" x="3.25" y="3.25"/>
+      </g>
     </svg>
   </g>
 
@@ -99,16 +96,15 @@
 
 
   <g id="circle">
-    <svg xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54">
-      <defs>
-        <linearGradient y2="1.0" x2="1.0" y1="0.1875" x1="0.171875" id="svg_4">
-          <stop stop-opacity="1" stop-color="#ffffff" offset="0.0"/>
-          <stop stop-opacity="1" stop-color="#ff6666" offset="1.0"/>
-        </linearGradient>
-      </defs>
-      <g>
-        <circle stroke-opacity="1" fill-opacity="1" stroke-width="2" stroke="#000000" fill="url(#svg_4)" id="svg_1" r="23" cy="27" cx="27"/>
+    <svg width="54" height="54"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:svg="http://www.w3.org/2000/svg">
+
+      <g class="layer">
+        <title>Layer 1</title>
+        <g id="svg_2">
+          <circle cx="27" cy="27" fill="none" id="svg_1" r="23" stroke="#444" stroke-width="2"/>
+        </g>
       </g>
     </svg>
   </g>
@@ -255,25 +251,17 @@
 
 
   <g id="image">
-    <svg xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <defs>
-        <linearGradient y2="1" x2="1" y1="0" x1="1" id="svg_25">
-          <stop stop-opacity="1" stop-color="#10284c" offset="0"/>
-          <stop stop-opacity="1" stop-color="#5374ad" offset="1"/>
-        </linearGradient>
-        <linearGradient y2="0.75781" x2="0.99609" y1="0" x1="1" id="svg_23">
-          <stop stop-opacity="1" stop-color="#162e84" offset="0"/>
-          <stop stop-opacity="1" stop-color="#97c4ef" offset="1"/>
-        </linearGradient>
-      </defs>
-      <rect x="1" y="3.83333" width="22" height="17" id="svg_18" fill="#202020" stroke="none"/>
-      <rect stroke-width="1.2" stroke="#ffffff" fill="#232947" id="svg_15" height="14" width="19" y="5.33333" x="2.5"/>
-      <rect fill="url(#svg_23)" id="svg_20" height="7.02244" width="15.96424" y="6.7266" x="4"/>
-      <rect fill="url(#svg_25)" id="svg_24" height="4.02393" width="15.96303" y="13.77454" x="4"/>
-      <circle fill="#ffffad" id="svg_26" r="1.83333" cy="9.82002" cx="7.13254"/>
-      <path d="m14.5696,13.77458l0.70243,-4.85313l-3.12899,4.85313l2.42656,0z" id="svg_14" fill="#404040" stroke="none"/>
-      <path d="m15.27203,8.98531c2.74584,0.06386 2.42657,4.21456 -0.63857,4.85313c0.70243,-1.27714 1.66028,-3.63985 0.63857,-4.85313z" id="svg_17" fill="#404040" stroke="none"/>
+    <svg width="24" height="24"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:svg="http://www.w3.org/2000/svg">
+
+      <g class="layer">
+        <g class="layer" id="svg_1">
+          <g clip-path="url(#image_type_clip0)" id="svg_2">
+            <path clip-rule="evenodd" d="m18.4167,3.75l-12.83337,0c-1.00833,0 -1.83333,0.825 -1.83333,1.83333l0,12.83337c0,1.0083 0.825,1.8333 1.83333,1.8333l12.83337,0c1.0083,0 1.8333,-0.825 1.8333,-1.8333l0,-12.83337c0,-1.00833 -0.825,-1.83333 -1.8333,-1.83333zm0,14.6667l-12.83337,0l0,-12.83337l12.83337,0l0,12.83337zm-7.33337,-3.0067l2.74997,-3.41l3.6667,4.5833l-11,0l2.75,-3.66663l1.83333,2.49333z" fill="#5f6368" fill-rule="evenodd" id="svg_3"/>
+          </g>
+        </g>
+      </g>
     </svg>
   </g>
 
@@ -307,13 +295,15 @@
   </g>
 
   <g id="fill">
-    <svg width="32" height="33"
-      xmlns="http://www.w3.org/2000/svg">
-      <g id="svg_5">
-        <path id="svg_4" d="m17.49167,10.97621c6.9875,-0.325 12.1875,2.70833 12.13333,7.36667l-0.325,10.075c-0.75833,4.0625 -2.275,3.0875 -3.03333,0.10833l0.21667,-9.64166c-0.43333,-0.975 -1.08333,-1.625 -1.95,-1.51667" stroke-linejoin="round" stroke="#606060" fill="#c0c0c0"/>
-        <path id="svg_1" d="m2.00055,17.1309l10.72445,-10.72445l12.67445,12.13279l-3.52056,0.05389l-9.15389,9.26223l-10.72445,-10.72445z" stroke-linejoin="round" stroke="#000000" fill="#c0c0c0"/>
-        <path id="svg_3" d="m14.35,13.57621c-0.1625,-3.95417 0.86667,-11.7 -1.84167,-11.59167c-2.70833,0.10833 -2.6,2.05833 -2.16667,6.93333" stroke-linejoin="round" stroke="#000000" fill="none"/>
-        <circle id="svg_2" r="1.60938" cy="15.20121" cx="14.45833" stroke-linejoin="round" stroke="#000000" fill="none"/>
+    <svg width="18" height="18"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <g class="layer">
+        <g id="svg_1">
+          <g fill="none" fill-rule="evenodd" id="svg_2">
+            <path d="m14.50125,11.37c0,0 -1.5,1.62 -1.5,2.62c0,0.83 0.67,1.5 1.5,1.5c0.83,0 1.5,-0.67 1.5,-1.5c0,-0.99 -1.5,-2.62 -1.5,-2.62l0,0zm-1.79,-2.08l-6.8,-6.79l-1.06,1.06l1.59,1.59l-4.15,4.14c-0.39,0.39 -0.39,1.02 0,1.41l4.5,4.5c0.2,0.2 0.45,0.3 0.71,0.3c0.26,0 0.51,-0.1 0.71,-0.29l4.5,-4.5c0.39,-0.39 0.39,-1.03 0,-1.42l0,0zm-8.5,0.21l3.29,-3.29l3.29,3.29l-6.58,0l0,0z" fill="#5f6368" id="svg_3"/>
+          </g>
+        </g>
       </g>
     </svg>
   </g>

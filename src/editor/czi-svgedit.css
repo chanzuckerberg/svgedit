@@ -23,9 +23,12 @@
 #xy_panel,
 #tool_make_link,
 #tool_link_url,
+#tool_fhrect,
+#tool_fhellipse,
 #none {
-  /* display: none !important; */
+  display: none !important;
 }
+
 
 body {
   background: #fff;
@@ -42,7 +45,7 @@ body {
 }
 
 #tools_top {
-  /* left: 1px; */
+  left: 1px;
 }
 
 #tools_left {
