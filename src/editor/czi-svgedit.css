@@ -198,3 +198,21 @@ path[id^="segline_"] {
 #canvasBackground {
   outline: solid 1px rgba(0,0,0,0.5);
 }
+
+#start_marker_list > button,
+#end_marker_list > button,
+#cur_start_marker_list > button,
+#cur_end_marker_list > button {
+  display: flex;
+  flex-direction: column;
+  width: 16px;
+}
+
+#start_marker_list > button::after,
+#end_marker_list > button::after,
+#cur_start_marker_list > button::after,
+#cur_end_marker_list > button::after {
+  content: "\25BE";
+  display: flex;
+  padding: 0 2px;
+}
