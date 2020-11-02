@@ -125,7 +125,7 @@ svgEditor.setConfig({
   * auto-detection as far as determining which color shows initially
   * in the preferences dialog (though it can be changed and saved).
   */
-  // bkgd_color: '#FFF',
+  bkgd_color: 'chessboard'
   // bkgd_url: '',
   // img_save: 'embed',
   // Only shows in UI as far as alert notices
