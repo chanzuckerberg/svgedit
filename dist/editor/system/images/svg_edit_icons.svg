@@ -155,9 +155,8 @@
       xmlns:svg="http://www.w3.org/2000/svg" preserveAspectRatio="none">
       <g class="layer">
         <title>Layer 1</title>
-        <g id="svg_3">
-          <path d="m5.51804,6.93226c-0.16522,0.04418 -0.33888,0.06774 -0.51804,0.06774c-1.10457,0 -2,-0.89543 -2,-2c0,-1.10457 0.89543,-2 2,-2c1.10457,0 2,0.89543 2,2c0,0.17916 -0.02356,0.35282 -0.06774,0.51804l7.5497,7.5497c0.16522,-0.04418 0.33888,-0.06774 0.51804,-0.06774c1.10457,0 2,0.89543 2,2c0,1.10457 -0.89543,2 -2,2c-1.10457,0 -2,-0.89543 -2,-2c0,-0.17916 0.02356,-0.35282 0.06774,-0.51804l-7.5497,-7.5497z" fill="#5f6368" fill-rule="evenodd" id="svg_4" transform="translate(2 2)"/>
-        </g>
+        <g id="svg_3"/>
+        <line fill="none" id="svg_1" stroke="#444" stroke-width="2" x1="4.5" x2="18.63029" y1="5.19062" y2="19.32091"/>
       </g>
     </svg>
   </g>
@@ -247,7 +246,6 @@
     <svg width="24" height="24"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:svg="http://www.w3.org/2000/svg">
-
       <g class="layer">
         <g class="layer" id="svg_1">
           <g clip-path="url(#image_type_clip0)" id="svg_2">
