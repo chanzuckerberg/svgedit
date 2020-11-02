@@ -2969,7 +2969,8 @@ editor.init = () => {
         } case 'input': {
           html = '<label' + contId + '>' +
             '<span id="' + tool.id + '_label">' +
-            tool.label + ':</span>' +
+            '<span class="label-text">' + tool.label + '</span>' +
+            '<span class="label-colon">:</span></span>' +
             '<input id="' + tool.id + '" title="' + tool.title +
             '" size="' + (tool.size || '4') +
             '" value="' + (tool.defval || '') + '" type="text"/></label>';

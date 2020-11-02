@@ -23,21 +23,21 @@ export default {
   contextTools: [
     {
       title: 'Start marker',
-      label: 's'
+      label: 'start'
     },
     {
       title: 'Select start marker type'
     },
     {
       title: 'Middle marker',
-      label: 'm'
+      label: 'middle'
     },
     {
       title: 'Select mid marker type'
     },
     {
       title: 'End marker',
-      label: 'e'
+      label: 'end'
     },
     {
       title: 'Select end marker type'

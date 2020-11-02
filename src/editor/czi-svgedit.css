@@ -208,6 +208,14 @@ path[id^="segline_"] {
   width: 16px;
 }
 
+#marker_panel .label-text {
+  padding: 0;
+}
+
+#marker_panel .label-colon {
+  display: none;
+}
+
 #start_marker_list > button::after,
 #end_marker_list > button::after,
 #cur_start_marker_list > button::after,
