@@ -33,11 +33,19 @@
 #tool_eyedropper,
 .tool_sep,
 .noop-none {
+  /* comment out this to debug all features */
   display: none !important;
 }
 
 body {
   background: #fff;
+}
+
+body * {
+  /* uncomment out this to debug all features */
+  /* pointer-events: all !important; */
+  /* color: red; */
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 select {
@@ -57,7 +65,8 @@ select {
 }
 
 #tools_top {
-  left: 1px;
+  /* comment out this to debug all features */
+  left: 1px;  
 }
 
 #tools_left {
@@ -163,12 +172,25 @@ INPUT.spin-button.down {
   box-shadow: inset 0 0 0px 0.5px #aaa;
 }
 
-body * {
-  /* pointer-events: all !important; */
+.tools_panel,
+.tools_panel * {
+  user-select: none;
 }
 
 /* selection mask color */
 #selectorRubberBand {
   fill: #eee !important;
   stroke: rgb(27,115,232) !important;
+}
+
+circle[id^="selectorGrip_"],
+circle[id^="ctrlpointgrip_"],
+circle[id^="pathpointgrip_"],
+path[id^="segline_"],
+path[id^="ctrlLine_"] {
+  fill: rgb(27,115,232); 
+}
+
+path[id^="segline_"] {
+  stroke: rgb(27,115,232);
 }
