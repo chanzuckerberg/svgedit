@@ -7249,9 +7249,10 @@ function hideCursor () {
           const div = document.createElement('div');
           assignAttributes(div, {
             style: 'pointer-events:none;width:100%;height:100%;' +
-          'background-image:url(data:image/gif;base64,' +
-          'R0lGODlhEAAQAIAAAP///9bW1iH5BAAAAAAALAAAAAAQABAAAAIfjG+' +
-          'gq4jM3IFLJgpswNly/XkcBpIiVaInlLJr9FZWAQA7);'
+          'background-image:url(data:image/png;base64,iVBORw0KGgoA' +
+          'AAANSUhEUgAAACAAAAAgAQMAAABJtOi3AAAAAXNSR0IArs4c6QAAAAZQ' +
+          'TFRF9/f3////TOsULwAAABRJREFUCNdjYGD4/5+BigR1TWMAAO29P8H0s' +
+          's2LAAAAAElFTkSuQmCC);'
           });
           bgPattern.appendChild(div);
           bg.append(bgPattern);
