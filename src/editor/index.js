@@ -46,15 +46,15 @@ svgEditor.setConfig({
 svgEditor.setConfig({
   // canvasName: 'default',
   // canvas_expansion: 3,
-  // initFill: {
-  //   color: 'FF0000', // solid red
-  //   opacity: 1
-  // },
-  // initStroke: {
-  //   width: 5,
-  //   color: '000000', // solid black
-  //   opacity: 1
-  // },
+  initFill: {
+    color: 'd0e1f3',
+    opacity: 1
+  },
+  initStroke: {
+    width: 1,
+    color: '000000', // solid black
+    opacity: 1
+  },
   // initOpacity: 1,
   // colorPickerCSS: null,
   // initTool: 'select',

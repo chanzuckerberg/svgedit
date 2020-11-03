@@ -91,6 +91,29 @@ select {
   box-shadow: none;
 }
 
+
+#start_marker_list_opts,
+#end_marker_list_opts,
+#position_opts.optcols3 {
+  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.2);
+  margin-left: -11px;
+  width: 46px;
+}
+
+#start_marker_list_opts.optcols3,
+#end_marker_list_opts.optcols3 {
+  background-color: #ccc;
+  width: 66px;
+}
+
+#start_marker_list_opts .tool_button,
+#end_marker_list_opts .tool_button {
+  background-color: #fff;
+  border-radius: 0;
+  border: none;
+  margin: 0 1px 1px 0;
+}
+
 .tool_button:hover, 
 .push_button:hover, 
 .buttonup:hover, 
@@ -147,13 +170,6 @@ INPUT.spin-button.down {
 #palette .palette_item .svg_icon {
   object-fit: contain;
   max-width: 100%;
-}
-
-
-#position_opts.optcols3 {
-  box-shadow: 0 1px 2px 0px rgba(0,0,0,0.2);
-  margin-left: -11px;
-  width: 46px;
 }
 
 #position_opts .push_button,
